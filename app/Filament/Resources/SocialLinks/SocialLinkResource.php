@@ -8,6 +8,7 @@ use App\Filament\Resources\SocialLinks\Pages\ListSocialLinks;
 use App\Filament\Resources\SocialLinks\Schemas\SocialLinkForm;
 use App\Filament\Resources\SocialLinks\Tables\SocialLinksTable;
 use App\Models\SocialLink;
+use UnitEnum;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
@@ -19,6 +20,8 @@ class SocialLinkResource extends Resource
     protected static ?string $model = SocialLink::class;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::AtSymbol;
+    protected static string|UnitEnum|null $navigationGroup = "Company Info";
+    protected static ?int $navigationSort = 3;
 
     protected static ?string $recordTitleAttribute = 'name';
 
