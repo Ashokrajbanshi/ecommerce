@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Client;
+use App\Observers\ClientObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 
@@ -21,5 +23,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Model::unguard();
+        Client::observe(ClientObserver::class);
     }
 }

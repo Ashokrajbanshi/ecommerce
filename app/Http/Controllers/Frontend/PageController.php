@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Mail\ClientRequestNotification;
+use App\Models\Admin;
 use App\Models\Client;
 use Illuminate\Http\Request;
-use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Mail;
 
 class PageController extends BaseController
 {
@@ -16,7 +18,7 @@ class PageController extends BaseController
     public function clientRequest(Request $request)
     {
         $request->validate([
-            'client_name' => 'required',
+            'name' => 'required',
             'shop_name' => 'required',
             'contact' => 'required',
             'email' => 'required|unique:clients',
@@ -25,14 +27,16 @@ class PageController extends BaseController
         ]);
 
         $client = new Client();
-        $client->client_name = $request->client_name;
+        $client->name = $request->name;
         $client->shop_name = $request->shop_name;
         $client->contact = $request->contact;
         $client->email = $request->email;
         $client->address = $request->address;
         $client->save();
+        $admin = Admin::first();
+        Mail::to($admin)->send(new ClientRequestNotification($client));
 
-        Alert::toast('Your request has been sent successfully!', 'success');
+        toast('Your request has been sent successfully!', 'success');
 
         return redirect()->back();
     }
