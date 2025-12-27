@@ -20,6 +20,23 @@
         button{
             cursor: pointer;
         }
+        .dropdown-menu {
+            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+        }
+
+        .dropdown:hover .dropdown-menu,
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown {
+            position: relative;
+        }
     </style>
 </head>
 <body class="">
@@ -37,6 +54,8 @@
     </main>
 
     <x-frontend-footer />
+
+    @stack('scripts')
 
 </body>
 </html>

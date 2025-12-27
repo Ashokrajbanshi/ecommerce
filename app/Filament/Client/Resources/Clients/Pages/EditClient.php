@@ -19,11 +19,11 @@ class EditClient extends EditRecord
         return [
             // DeleteAction::make(),
             EditAction::make()
+                ->label('Change Password')
                 ->schema([
                     TextInput::make('password')
                         ->password()
                         ->revealable()
-                        ->label('Change Password')
                         ->required(),
                 ]),
         ];

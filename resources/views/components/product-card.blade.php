@@ -1,6 +1,8 @@
 @props(['product'])
 
-<div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="electronics">
+<a href="{{route('product', $product->id)}}">
+
+    <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="electronics">
                 <div class="relative overflow-hidden h-48 md:h-56">
                     <img src="{{ asset(Storage::url($product->image[0])) }}"
                          alt="{{ $product->name }}"
@@ -18,8 +20,8 @@
                         <span class="text-lg md:text-xl font-bold text-gray-900">Rs.{{ $product->price - ($product->price * $product->discount /100) }}</span>
                         @if ($product->discount > 0 )
                             <span class="text-sm md:text-base text-orange-500 line-through">Rs. {{ $product->price }}</span>
+                            <span class="text-xs bg-blue-400 text-white px-2 py-1 rounded font-semibold">{{ $product->discount }} %</span>
                         @endif
-                        <span class="text-xs bg-blue-400 text-white px-2 py-1 rounded font-semibold">{{ $product->discount }} %</span>
                     </div>
 
                     <div class="flex items-center gap-1 mb-4">
@@ -43,4 +45,5 @@
                         </button>
                     </div>
                 </div>
-            </div>
+    </div>
+</a>
