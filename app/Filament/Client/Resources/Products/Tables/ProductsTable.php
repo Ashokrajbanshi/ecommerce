@@ -1,37 +1,32 @@
 <?php
 
-namespace App\Filament\Resources\Clients\Tables;
+namespace App\Filament\Client\Resources\Products\Tables;
 
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
-class ClientsTable
+class ProductsTable
 {
     public static function configure(Table $table): Table
     {
         return $table
-            ->defaultSort('created_at', 'desc')
             ->columns([
+
                 TextColumn::make('name')
                     ->searchable(),
-                TextColumn::make('shop_name')
-                    ->copyable()
-                    ->searchable(),
-                TextColumn::make('contact')
-                    ->copyable()
-                    ->searchable(),
-                TextColumn::make('email')
-                    ->label('Email address')
-                    ->copyable()
-                    ->searchable(),
-                TextColumn::make('status')
-                    ->searchable(),
-                TextColumn::make('expire_date')
-                    ->date()
+                TextColumn::make('price')
+                    ->prefix('Rs.')
                     ->sortable(),
+                TextColumn::make('discount')
+                    ->suffix('%')
+                    ->numeric()
+                    ->sortable(),
+                ToggleColumn::make('stock'),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

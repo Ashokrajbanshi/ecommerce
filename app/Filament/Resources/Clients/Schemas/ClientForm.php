@@ -13,7 +13,7 @@ class ClientForm
     {
         return $schema
             ->components([
-                TextInput::make('client_name')
+                TextInput::make('name')
                     ->required(),
                 TextInput::make('shop_name')
                     ->required(),
@@ -30,7 +30,7 @@ class ClientForm
                     ->options([
                         'pending' => 'Pending',
                         'approved' => 'Approved',
-                        
+
                     ])
                     ->default('pending'),
                 DatePicker::make('expire_date'),

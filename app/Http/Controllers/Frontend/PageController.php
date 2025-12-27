@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Mail\ClientRequestNotification;
 use App\Models\Admin;
 use App\Models\Client;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -12,7 +13,16 @@ class PageController extends BaseController
 {
     public function home()
     {
-        return view('frontend.home');
+        $clients = Client::where("expire_date", ">=", now())->where('status', 'approved')->get();
+        $products = Product::whereIn('client_id', $clients->pluck('id'))->where('stock', true)->get();
+        return view('frontend.home', compact('products'));
+    }
+
+    public function search(Request $request)
+    {
+        $q = $request->input('q');
+        $products = Product::where('name', 'like', '%'.$q.'%')->where('stock', true)->get();
+        return view('frontend.search', compact('products', 'q'));
     }
 
     public function clientRequest(Request $request)

@@ -98,6 +98,387 @@
     </style>
 
     @endpush
+<section class="py-12 px-4 md:px-8 bg-gray-50">
+    <div class="container mx-auto">
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-12">
+            <div class="mb-4 md:mb-0">
+                <h2 class="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 relative pb-3 mb-2">
+                    Featured Products
+                    <span class="absolute bottom-0 left-0 w-16 h-1 bg-linear-to-r from-amber-500 to-orange-500 rounded-full"></span>
+                </h2>
+                <p class="text-gray-600 mt-2">Discover our best-selling items with exclusive discounts</p>
+            </div>
+            <a href="#" class="inline-flex items-center text-amber-600 hover:text-amber-700 font-semibold transition-all duration-300 group">
+                View All Products
+                <i class="fas fa-arrow-right ml-2 group-hover:ml-3 transition-all duration-300"></i>
+            </a>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap gap-2 md:gap-3 mb-8 md:mb-12">
+            <button class="filter-tab-active px-4 md:px-6 py-2 bg-linear-to-r from-amber-500 to-orange-500 text-white rounded-full text-sm md:text-base font-medium border border-amber-500 transition-all duration-300 hover:shadow-lg" data-filter="all">
+                All Products
+            </button>
+            <button class="filter-tab px-4 md:px-6 py-2 bg-gray-100 text-gray-600 rounded-full text-sm md:text-base font-medium border border-gray-200 transition-all duration-300 hover:bg-linear-to-r hover:from-amber-500 hover:to-orange-500 hover:text-white hover:border-amber-500" data-filter="electronics">
+                Electronics
+            </button>
+            <button class="filter-tab px-4 md:px-6 py-2 bg-gray-100 text-gray-600 rounded-full text-sm md:text-base font-medium border border-gray-200 transition-all duration-300 hover:bg-linear-to-r hover:from-amber-500 hover:to-orange-500 hover:text-white hover:border-amber-500" data-filter="fashion">
+                Fashion
+            </button>
+            <button class="filter-tab px-4 md:px-6 py-2 bg-gray-100 text-gray-600 rounded-full text-sm md:text-base font-medium border border-gray-200 transition-all duration-300 hover:bg-linear-to-r hover:from-amber-500 hover:to-orange-500 hover:text-white hover:border-amber-500" data-filter="home">
+                Home & Kitchen
+            </button>
+            <button class="filter-tab px-4 md:px-6 py-2 bg-gray-100 text-gray-600 rounded-full text-sm md:text-base font-medium border border-gray-200 transition-all duration-300 hover:bg-linear-to-r hover:from-amber-500 hover:to-orange-500 hover:text-white hover:border-amber-500" data-filter="sports">
+                Sports
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
+            <!-- Product 1 -->
+            @foreach ($products as $product)
+                <x-product-card :product="$product" />
+            @endforeach
+
+            {{-- <!-- Product 2 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="fashion">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Men's Casual Shirt"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        New
+                    </div>
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="far fa-heart text-gray-600 hover:text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Fashion</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Men's Casual Cotton Shirt - Premium Quality Fit
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$34.99</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="far fa-star text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(56)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="add-to-cart-btn flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="home">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Smart Watch"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Hot
+                    </div>
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="fas fa-heart text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Electronics</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Smart Watch with Heart Rate Monitor & Sleep Tracking
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$199.99</span>
+                        <span class="text-sm md:text-base text-gray-400 line-through">$249.99</span>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded font-semibold">-20%</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(342)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="add-to-cart-btn flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="electronics">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1606788075767-10c6c2e5f1d3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Coffee Maker"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="far fa-heart text-gray-600 hover:text-red-500"></i>
+                    </div>
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-900/80 text-white px-4 py-2 rounded-full text-sm font-semibold">
+                        Out of Stock
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Home & Kitchen</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Programmable Coffee Maker with Thermal Carafe
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$79.99</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="far fa-star text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(89)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="flex-1 bg-gray-200 text-gray-500 font-semibold py-2.5 px-4 rounded-lg cursor-not-allowed flex items-center justify-center gap-2" disabled>
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Out of Stock</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 5 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="sports">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Yoga Mat"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Sale -15%
+                    </div>
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="far fa-heart text-gray-600 hover:text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Sports</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Premium Non-Slip Yoga Mat with Carrying Strap
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$42.49</span>
+                        <span class="text-sm md:text-base text-gray-400 line-through">$49.99</span>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded font-semibold">-15%</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star-half-alt text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(67)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="add-to-cart-btn flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 6 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="fashion">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Running Shoes"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 bg-purple-600 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Best Seller
+                    </div>
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="far fa-heart text-gray-600 hover:text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Sports</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Professional Running Shoes with Cushion Technology
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$124.99</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(231)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="add-to-cart-btn flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 7 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="home">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Cookware Set"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        Sale -25%
+                    </div>
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="fas fa-heart text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Home & Kitchen</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Non-Stick Cookware Set 10-Piece with Glass Lids
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$149.99</span>
+                        <span class="text-sm md:text-base text-gray-400 line-through">$199.99</span>
+                        <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded font-semibold">-25%</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="far fa-star text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(112)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="add-to-cart-btn flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 8 -->
+            <div class="product-card bg-white rounded-xl shadow-md hover:shadow-xl border border-gray-200 hover:border-amber-300 transition-all duration-300 overflow-hidden group" data-category="electronics">
+                <div class="relative overflow-hidden h-48 md:h-56">
+                    <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                         alt="Smartphone"
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    <div class="absolute top-3 left-3 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                        New
+                    </div>
+                    <div class="absolute top-3 right-3 w-8 h-8 md:w-10 md:h-10 bg-white rounded-full flex items-center justify-center shadow-md cursor-pointer hover:bg-red-50 hover:text-red-500 transition-colors duration-300">
+                        <i class="far fa-heart text-gray-600 hover:text-red-500"></i>
+                    </div>
+                </div>
+                <div class="p-4 md:p-5">
+                    <div class="text-xs text-gray-500 uppercase tracking-wider mb-2">Electronics</div>
+                    <h3 class="text-sm md:text-base font-semibold text-gray-900 mb-3 line-clamp-2 h-10 md:h-12">
+                        Latest Smartphone with Triple Camera & 128GB Storage
+                    </h3>
+
+                    <div class="flex items-center flex-wrap gap-2 mb-3">
+                        <span class="text-lg md:text-xl font-bold text-gray-900">$699.99</span>
+                    </div>
+
+                    <div class="flex items-center gap-1 mb-4">
+                        <div class="flex text-amber-500">
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star text-xs md:text-sm"></i>
+                            <i class="fas fa-star-half-alt text-xs md:text-sm"></i>
+                        </div>
+                        <span class="text-xs text-gray-500 ml-1">(456)</span>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button class="add-to-cart-btn flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 group/btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="text-sm">Add to Cart</span>
+                        </button>
+                        <button class="quick-view-btn w-10 h-10 border border-gray-300 rounded-lg flex items-center justify-center hover:bg-gray-50 transition-colors duration-300">
+                            <i class="fas fa-eye text-gray-600"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div> --}}
+
+        <!-- View More Button -->
+        <div class="text-center mt-12">
+            <button class="load-more-btn px-8 py-3 bg-white border-2 border-amber-500 text-amber-600 rounded-lg font-semibold hover:bg-amber-50 transition-colors duration-300">
+                Load More Products
+            </button>
+        </div>
+    </div>
+</section>
+
 <section id="partner-form" class="mb-16">
                 <div class="bg-white rounded-2xl shadow-xl overflow-hidden ">
                     <!-- Section header -->

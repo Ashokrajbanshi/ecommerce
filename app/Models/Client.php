@@ -52,4 +52,9 @@ class Client extends Authenticatable implements FilamentUser
     {
         return true;
     }
+
+    public function client(){
+        return $this->hasMany(client::class);
+
+    }
 }

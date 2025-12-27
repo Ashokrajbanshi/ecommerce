@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class ForntendHeader extends Component
+class ProductCard extends Component
 {
     /**
      * Create a new component instance.
@@ -21,6 +21,6 @@ class ForntendHeader extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.forntend-header');
+        return view('components.product-card');
     }
 }

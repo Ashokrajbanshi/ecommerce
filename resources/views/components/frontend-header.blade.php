@@ -129,7 +129,7 @@
                     <div class="flex flex-col md:flex-row items-center justify-between">
                         <!-- Logo -->
                         <div class="mb-4 md:mb-0">
-                            <a href="#" class="flex items-center group">
+                            <a href="{{ route('home') }}" class="flex items-center group">
                                 <div class="bg-linear-to-r from-amber-500 to-orange-500 rounded-xl p-3 mr-3 shadow-md group-hover:shadow-lg transition-shadow">
                                     <i class="fas fa-shopping-bag text-2xl text-white"></i>
                                 </div>
@@ -143,15 +143,17 @@
                         <!-- Search bar -->
                         <div class="w-full md:w-1/3 mb-4 md:mb-0">
                             <div class="relative">
-                                <input type="text"
+                                <form action="{{ route('search') }}" method="get">
+                                    <input type="text" name="q"
                                        placeholder="Search products, brands, categories..."
                                        class="w-full py-3 px-4 pl-12 rounded-lg border border-gray-300 bg-gray-50 text-gray-800 focus:outline-none focus:border-amber-400 search-input">
-                                <div class="absolute left-4 top-3.5 text-gray-500">
-                                    <i class="fas fa-search"></i>
-                                </div>
-                                <button class="absolute right-2 top-2 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-1.5 px-5 rounded-md transition-all duration-300 shadow hover:shadow-md">
-                                    <i class="fas fa-search mr-1"></i> Search
-                                </button>
+                                    <div class="absolute left-4 top-3.5 text-gray-500">
+                                        <i class="fas fa-search"></i>
+                                    </div>
+                                    <button class="absolute right-2 top-2 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-1.5 px-5 rounded-md transition-all duration-300 shadow hover:shadow-md">
+                                        <i class="fas fa-search mr-1"></i> Search
+                                    </button>
+                                </form>
                             </div>
                             <div class="text-xs text-gray-500 mt-2 pl-2">
                                 Try: <a href="#" class="text-amber-600 hover:text-amber-700 font-medium ml-1">iPhone 15</a>,
