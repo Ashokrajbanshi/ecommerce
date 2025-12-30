@@ -14,4 +14,16 @@ class Product extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
+    public function order_items()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
+
 }

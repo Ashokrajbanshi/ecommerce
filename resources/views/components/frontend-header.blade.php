@@ -165,7 +165,7 @@
                         <!-- User actions: Login, Cart, Wishlist -->
                         <div class="flex items-center space-x-5">
                             <!-- Login / User Account -->
-                            <div class="dropdown relative">
+                            {{-- <div class="dropdown relative">
                                 <button class="flex flex-col md:flex-row items-center text-gray-700 hover:text-amber-600 transition-colors focus:outline-none">
                                     <div class="bg-gray-100 text-gray-800 rounded-full p-2 mb-1 md:mb-0 md:mr-2">
                                         <i class="fas fa-user text-lg"></i>
@@ -182,11 +182,11 @@
                                         <p class="text-sm text-gray-600">Access your account to track orders, save items, and more.</p>
                                     </div>
                                     <div class="px-4 py-3">
-                                        <a href="#" class="flex items-center justify-center w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg mb-3 transition-colors">
+                                        <a href="{{ route('login') }}" class="flex items-center justify-center w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg mb-3 transition-colors">
                                             <i class="fas fa-sign-in-alt mr-2"></i>
                                             <span>Login to Account</span>
                                         </a>
-                                        <a href="#" class="flex items-center justify-center w-full py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg transition-colors">
+                                        <a href="{{ route('register') }}" class="flex items-center justify-center w-full py-2.5 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-lg transition-colors">
                                             <i class="fas fa-user-plus mr-2"></i>
                                             <span>Create New Account</span>
                                         </a>
@@ -206,7 +206,96 @@
                                         </a>
                                     </div>
                                 </div>
+                            </div> --}}
+                            <div class="dropdown relative">
+                            <button class="flex flex-col md:flex-row items-center text-gray-700 hover:text-amber-600 transition-colors focus:outline-none">
+                                <div class="bg-gray-100 text-gray-800 rounded-full p-2 mb-1 md:mb-0 md:mr-2">
+                                    <i class="fas fa-user text-lg"></i>
+                                </div>
+
+                                <div class="text-left hidden md:block">
+                                    @guest
+                                        <div class="text-sm font-medium">Login / Register</div>
+                                        <div class="text-xs text-gray-500">My Account</div>
+                                    @endguest
+
+                                    @auth
+                                        <div class="text-sm font-medium">{{ Auth::user()->name }}</div>
+                                        <div class="text-xs text-gray-500">My Account</div>
+                                    @endauth
+                                </div>
+
+                                <i class="fas fa-chevron-down ml-1 text-xs hidden md:block"></i>
+                            </button>
+
+                            <div class="dropdown-menu absolute right-0 mt-2 w-64 bg-white text-gray-800 rounded-lg shadow-xl z-50 py-4 border">
+
+                                {{-- Guest (Not Logged In) --}}
+                                @guest
+                                    <div class="px-4 pb-3 border-b">
+                                        <h3 class="font-bold text-gray-900 mb-2">Welcome to ShopNow</h3>
+                                        <p class="text-sm text-gray-600">
+                                            Access your account to track orders, save items, and more.
+                                        </p>
+                                    </div>
+
+                                    <div class="px-4 py-3">
+                                        <a href="{{ route('login') }}"
+                                        class="flex items-center justify-center w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg mb-3">
+                                            <i class="fas fa-sign-in-alt mr-2"></i>
+                                            Login to Account
+                                        </a>
+
+                                        <a href="{{ route('register') }}"
+                                        class="flex items-center justify-center w-full py-2.5 border border-gray-300 hover:bg-gray-50 rounded-lg">
+                                            <i class="fas fa-user-plus mr-2"></i>
+                                            Create New Account
+                                        </a>
+                                    </div>
+                                @endguest
+
+                                {{-- Authenticated User --}}
+                                @auth
+                                    <div class="px-4 pb-3 border-b">
+                                        <h3 class="font-bold text-gray-900 mb-1">
+                                            Hello, {{ Auth::user()->name }} 👋
+                                        </h3>
+                                        <p class="text-sm text-gray-600">
+                                            Manage your account & orders
+                                        </p>
+                                    </div>
+
+                                    <div class="px-4 py-3">
+                                        <a href="" class="flex items-center py-2 hover:text-amber-600">
+                                            <i class="fas fa-box mr-3 text-gray-500"></i>
+                                            My Orders
+                                        </a>
+
+                                        <a href="" class="flex items-center py-2 hover:text-amber-600">
+                                            <i class="fas fa-heart mr-3 text-gray-500"></i>
+                                            My Wishlist
+                                        </a>
+
+                                        <a href="{{ route('profile.edit') }}" class="flex items-center py-2 hover:text-amber-600">
+                                            <i class="fas fa-cog mr-3 text-gray-500"></i>
+                                            Account Settings
+                                        </a>
+                                    </div>
+
+                                    <div class="border-t px-4 pt-3">
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit"
+                                                    class="flex items-center w-full py-2 text-red-600 hover:text-red-700">
+                                                <i class="fas fa-sign-out-alt mr-3"></i>
+                                                Logout
+                                            </button>
+                                        </form>
+                                    </div>
+                                @endauth
                             </div>
+                        </div>
+
 
                             <!-- Wishlist -->
                             <a href="#" class="flex flex-col md:flex-row items-center text-gray-700 hover:text-amber-600 transition-colors relative group">
