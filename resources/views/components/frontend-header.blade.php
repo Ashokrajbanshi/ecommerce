@@ -312,16 +312,16 @@
                             </a>
 
                             <!-- Cart -->
-                            <a href="#" class="flex flex-col md:flex-row items-center text-gray-700 hover:text-amber-600 transition-colors relative group">
+                            <a href="{{ route('cart') }}" class="flex flex-col md:flex-row items-center text-gray-700 hover:text-amber-600 transition-colors relative group">
                                 <div class="relative">
                                     <div class="bg-gray-100 text-gray-800 rounded-full p-2 mb-1 md:mb-0 md:mr-2">
                                         <i class="fas fa-shopping-cart text-lg"></i>
                                     </div>
-                                    <div class="cart-count animate-pulse">3</div>
+                                    <div class="cart-count animate-pulse"></div>
                                 </div>
                                 <div class="text-left hidden md:block">
                                     <div class="text-sm font-medium">My Cart</div>
-                                    <div class="text-xs text-gray-500">$149.99</div>
+                                    <div class="text-xs text-gray-500"></div>
                                 </div>
                             </a>
 
@@ -580,5 +580,40 @@
         // Add hover effect to navigation items
         document.querySelectorAll('.nav-item').forEach(item => {
             item.classList.add('px-3', 'py-2', 'rounded-md', 'flex', 'items-center', 'text-gray-700', 'hover:bg-amber-50', 'hover:text-amber-700', 'transition-colors');
+        });
+
+        // Function to update cart count in header
+        function updateHeaderCartCount() {
+            @auth
+            fetch("{{ route('cart.count') }}")
+                .then(response => response.json())
+                .then(data => {
+                    const cartCountElement = document.querySelector('.cart-count');
+                    const cartAmountElement = document.querySelector('.cart-amount');
+
+                    if (cartCountElement) {
+                        cartCountElement.textContent = data.count;
+                        if (data.count > 0) {
+                            cartCountElement.style.display = 'flex';
+                        } else {
+                            cartCountElement.style.display = 'none';
+                        }
+                    }
+
+                    // Optional: Update cart amount if you have that element
+                    if (cartAmountElement && data.total) {
+                        cartAmountElement.textContent = '₹' + data.total;
+                    }
+                })
+                .catch(error => console.error('Error fetching cart count:', error));
+            @endauth
+        }
+
+        // Update cart count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateHeaderCartCount();
+
+            // Update cart count every 30 seconds (optional)
+            setInterval(updateHeaderCartCount, 30000);
         });
     </script>

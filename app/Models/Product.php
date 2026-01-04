@@ -24,6 +24,11 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    // // Add this method to the Product model
+    // public function wishlistedByUsers()
+    // {
+    //     return $this->belongsToMany(User::class, 'wishlists', 'product_id', 'user_id');
+    // }
 
 
 }

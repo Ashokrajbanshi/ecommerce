@@ -116,46 +116,55 @@
         function addToCart() {
             const quantity = parseInt(document.getElementById('qty').value) || 1;
 
-            // Check if product is already in cart
-            const existingItemIndex = cart.findIndex(item => item.id === product.id);
+            // Check if user is logged in
+            @if(!Auth::check())
+                // If not logged in, redirect to login
+                window.location.href = "{{ route('login') }}";
+                return;
+            @endif
 
-            if (existingItemIndex > -1) {
-                // Update quantity if already in cart
-                cart[existingItemIndex].quantity += quantity;
-            } else {
-                // Add new item to cart
-                const cartItem = {
-                    id: product.id,
-                    name: product.name,
-                    price: product.discount > 0
-                        ? product.price - (product.price * product.discount / 100)
-                        : product.price,
-                    originalPrice: product.price,
-                    discount: product.discount,
-                    image: product.image[0],
-                    quantity: quantity,
-                    stock: product.stock
-                };
-                cart.push(cartItem);
-            }
+            // Create a form to submit via POST
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{{ route('cart.add') }}";
+            form.style.display = 'none';
 
-            // Save to localStorage
-            localStorage.setItem('cart', JSON.stringify(cart));
+            // Add CSRF token
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_token';
+            csrfToken.value = "{{ csrf_token() }}";
+            form.appendChild(csrfToken);
 
-            // Update cart UI
-            updateCartCount();
+            // Add product_id
+            const productId = document.createElement('input');
+            productId.type = 'hidden';
+            productId.name = 'product_id';
+            productId.value = {{ $product->id }};
+            form.appendChild(productId);
 
-            // Show notification
-            showNotification(`${quantity} ${product.name} added to cart!`);
+            // Add qty (IMPORTANT: use 'qty' not 'quantity')
+            const qtyInput = document.createElement('input');
+            qtyInput.type = 'hidden';
+            qtyInput.name = 'qty'; // This must match your database field name
+            qtyInput.value = quantity;
+            form.appendChild(qtyInput);
 
-            // Update cart icon animation
-            animateCartIcon();
+            // Submit the form
+            document.body.appendChild(form);
+            console.log('Adding to cart:', {
+                product_id: {{ $product->id }},
+                qty: quantity
+            });
+            form.submit();
         }
 
         function buyNow() {
             addToCart();
-            // Redirect to checkout page
-            window.location.href = '';
+            // Redirect to cart page after a short delay
+            setTimeout(() => {
+                window.location.href = "{{ route('cart') }}";
+            },500);
         }
 
         function showNotification(message) {
