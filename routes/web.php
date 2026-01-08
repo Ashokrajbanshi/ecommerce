@@ -18,6 +18,13 @@ Route::delete('/cart/remove/{id}', [PageController::class, 'removeFromCart'])->n
 Route::post('/cart/clear', [PageController::class, 'clearCart'])->name('cart.clear');
 Route::get('/cart/count', [PageController::class, 'getCartCount'])->name('cart.count');
 
+// In your routes/web.php, add this after your existing checkout route:
+Route::get('/checkout/{id}', [PageController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/process', [PageController::class, 'processCheckout'])->name('checkout.process');
+Route::get('/order/confirmation/{id}', [PageController::class, 'orderConfirmation'])->name('order.confirmation');
+
+Route::get('/khalti/callback', [PageController::class, 'khaltiCallback'])->name('khalti.callback');
+
 // // Wishlist routes
 // // Add these routes after your cart routes
 // Route::get('/wishlist', [PageController::class, 'viewWishlist'])->name('wishlist.index')->middleware('auth');

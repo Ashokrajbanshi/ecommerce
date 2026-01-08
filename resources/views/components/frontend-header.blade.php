@@ -539,7 +539,8 @@
     </div> --}}
 </div>
 
-    <script>
+    @push('scripts')
+        <script>
         // Toggle mobile menu
         const mobileMenuToggle = document.getElementById('mobileMenuToggle');
         const mobileMenu = document.getElementById('mobileMenu');
@@ -617,3 +618,5 @@
             setInterval(updateHeaderCartCount, 30000);
         });
     </script>
+
+    @endpush

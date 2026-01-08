@@ -6,10 +6,17 @@ use App\Mail\ClientRequestNotification;
 use App\Models\Admin;
 use App\Models\Cart;
 use App\Models\Client;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Payment;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
@@ -165,30 +172,49 @@ class PageController extends BaseController
     }
 
     public function viewCart()
-    {
-        // Check if user is authenticated
-        if (!Auth::check()) {
-            toast('Please login to view your cart!', 'error');
-            return redirect()->route('login');
+        {
+            // Check if user is authenticated
+            if (!Auth::check()) {
+                toast('Please login to view your cart!', 'error');
+                return redirect()->route('login');
+            }
+
+            // Get cart items with product relationship
+            $cartItems = Cart::with(['product' => function($query) {
+                $query->select('id', 'name', 'price', 'discount', 'image', 'stock');
+            }])
+            ->where('user_id', Auth::id())
+            ->get();
+
+            Log::info('View cart:', [
+                'user_id' => Auth::id(),
+                'cart_count' => $cartItems->count(),
+                'total_items' => $cartItems->sum('qty')
+            ]);
+
+            $totalAmount = $cartItems->sum('amount');
+
+            // Get the client - THIS IS WHAT'S MISSING
+            // Option 1: Get client from the first product in cart
+            $client = null;
+            if ($cartItems->count() > 0) {
+                foreach ($cartItems as $item) {
+                    if ($item->product && $item->product->client) {
+                        $client = $item->product->client;
+                        break;
+                    }
+                }
+            }
+
+            // Option 2: If no client found in cart, get the first active client
+            if (!$client) {
+                $client = Client::where("expire_date", ">=", now())
+                                ->where('status', 'approved')
+                                ->first();
+            }
+
+            return view('frontend.cart', compact('cartItems', 'totalAmount', 'client'));
         }
-
-        // Get cart items with product relationship
-        $cartItems = Cart::with(['product' => function($query) {
-            $query->select('id', 'name', 'price', 'discount', 'image', 'stock');
-        }])
-        ->where('user_id', Auth::id())
-        ->get();
-
-        Log::info('View cart:', [
-            'user_id' => Auth::id(),
-            'cart_count' => $cartItems->count(),
-            'total_items' => $cartItems->sum('qty')
-        ]);
-
-        $totalAmount = $cartItems->sum('amount');
-
-        return view('frontend.cart', compact('cartItems', 'totalAmount'));
-    }
 
     public function updateCart(Request $request, $id)
     {
@@ -275,6 +301,195 @@ class PageController extends BaseController
         $count = Cart::where('user_id', Auth::id())->sum('qty');
         return response()->json(['count' => $count]);
     }
+
+    public function checkout($id)
+{
+    $client = Client::findOrFail($id);
+    $user = Auth::user();
+
+    // Get cart items for this user
+    $cartItems = Cart::with('product')
+        ->where('user_id', Auth::id())
+        ->get();
+
+    if ($cartItems->isEmpty()) {
+        return redirect()->route('cart')->with('error', 'Your cart is empty!');
+    }
+
+    $totalAmount = $cartItems->sum('amount');
+
+    return view('frontend.checkout', compact('client', 'cartItems', 'totalAmount'));
+}
+
+public function processCheckout(Request $request)
+{
+    //  dd($request->payment_method);
+
+    $request->validate([
+        'client_id' => 'required|exists:clients,id',
+        'full_name' => 'required|string|max:255',
+        'phone' => 'required|string|max:15',
+        'email' => 'required|email|max:255',
+        'address' => 'required|string',
+        'city' => 'required|string|max:100',
+        'state' => 'required|string|max:100',
+        'payment_method' => 'required|in:cod,khalti,bank',
+        'terms' => 'required|accepted',
+    ]);
+
+    try {
+        DB::beginTransaction();
+
+        $client = Client::findOrFail($request->client_id);
+        $user = Auth::user();
+
+        // Get cart items
+        $cartItems = Cart::where('user_id', Auth::id())
+            ->with('product')
+            ->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->back()->with('error', 'Your cart is empty!');
+        }
+
+        // Calculate total amount
+        $totalAmount = $cartItems->sum('amount');
+
+        // Create delivery address
+        $deliveryAddress = $request->address . ', ' . $request->city . ', ' . $request->state;
+        if ($request->zip_code) {
+            $deliveryAddress .= ' - ' . $request->zip_code;
+        }
+
+        // Create order
+        $order = Order::create([
+            'user_id' => $user->id,
+            'client_id' => $client->id,
+            'total_amount' => $totalAmount,
+            'status' => 'pending',
+            'delivery_address' => $deliveryAddress,
+        ]);
+
+        // Create order items
+        foreach ($cartItems as $cartItem) {
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $cartItem->product_id,
+                'qty' => $cartItem->qty,
+                'amount' => $cartItem->amount,
+            ]);
+        }
+
+        // Create payment record (status pending for Khalti)
+        $payment = Payment::create([
+            'user_id' => $user->id,
+            'order_id' => $order->id,
+            'payment_method' => $request->input('payment_method'),
+            'status' => 'pending', // Set ALL payments as pending initially
+            'amount' => $totalAmount,
+        ]);
+
+
+        // Clear the cart for this user
+        Cart::where('user_id', Auth::id())->delete();
+
+        // ========================
+        // KHALTI PAYMENT SECTION
+        // ========================
+       if ($request->payment_method === 'khalti') {
+
+            $returnUrl  = route('khalti.callback');
+            $websiteUrl = config('app.url');
+
+            try {
+                $response = Http::withHeaders([
+                    "Authorization" => "Key " . env("KHALTI_SECRET_KEY"),
+                    "Content-Type"  => "application/json",
+                ])->post('https://a.khalti.com/api/v2/epayment/initiate/', [
+                    "return_url" => $returnUrl,
+                    "website_url" => $websiteUrl,
+                    "amount" => $totalAmount * 100,
+                    "purchase_order_id" => $order->id,
+                    "purchase_order_name" => "Order #{$order->id}",
+                    "customer_info" => [
+                        "name" => $request->full_name,
+                        "email" => $request->email,
+                        "phone" => $request->phone,
+                    ],
+                ]);
+
+                if (!isset($response['payment_url'])) {
+                    throw new \Exception('Khalti initiation failed');
+                }
+
+                session(['khalti_order_id' => $order->id]);
+
+                DB::commit();
+                return redirect($response['payment_url']);
+
+            } catch (\Exception $e) {
+                DB::rollBack();
+                Log::error('Khalti Error: ' . $e->getMessage());
+                return redirect()->back()->with('error', 'Khalti payment failed');
+            }
+        }
+
+        DB::commit();
+
+        // For COD/bank, redirect to confirmation
+        return redirect()->route('order.confirmation', $order->id)
+            ->with('success', 'Order placed successfully!');
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Checkout Error: ' . $e->getMessage());
+        return redirect()->back()
+            ->with('error', 'Failed to place order. Please try again.')
+            ->withInput();
+    }
+}
+
+public function orderConfirmation($id)
+{
+    $order = Order::with(['client', 'order_Items.product', 'payment'])
+        ->where('user_id', Auth::id())
+        ->findOrFail($id);
+
+    return view('frontend.order-confirmation', compact('order'));
+}
+
+public function khaltiCallback(Request $request)
+{
+    $orderId = session('khalti_order_id');
+
+    if (!$orderId || !$request->pidx) {
+        return redirect()->route('cart')->with('error', 'Invalid payment response');
+    }
+
+    $order = Order::with('payment')->findOrFail($orderId);
+
+    $response = Http::withHeaders([
+        "Authorization" => "Key " . env("KHALTI_SECRET_KEY"),
+        "Content-Type"  => "application/json",
+    ])->post('https://a.khalti.com/api/v2/epayment/lookup/', [
+        "pidx" => $request->pidx,
+    ]);
+
+    if ($response['status'] === 'Completed') {
+
+        $order->update(['status' => 'completed']);
+        $order->payment->update(['status' => 'completed']);
+
+        Cart::where('user_id', $order->user_id)->delete();
+
+        return redirect()->route('order.confirmation', $order->id)
+            ->with('success', 'Payment successful!');
+    }
+
+    return redirect()->route('order.confirmation', $order->id)
+        ->with('error', 'Payment verification failed');
+}
+
 
     // Add these methods to your PageController
 
@@ -440,5 +655,7 @@ class PageController extends BaseController
 
     //     return response()->json(['is_in_wishlist' => $isInWishlist]);
     // }
+
+
 
 }

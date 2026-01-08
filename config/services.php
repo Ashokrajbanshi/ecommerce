@@ -41,4 +41,13 @@ return [
     'redirect' => env('GOOGLE_REDIRECT'),
 ],
 
+
+  'khalti' => [
+    'public_key' => env('KHALTI_PUBLIC_KEY'),
+    'secret_key' => env('KHALTI_SECRET_KEY'),
+    'mode' => env('KHALTI_ENVIRONMENT', 'test'),
+    'return_url' => env('KHALTI_RETURN_URL', 'http://127.0.0.1:8000/khalti/verify'),
+    'website_url' => env('KHALTI_WEBSITE_URL', 'http://127.0.0.1:8000'),
+],
+
 ];

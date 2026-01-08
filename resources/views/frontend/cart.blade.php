@@ -226,9 +226,9 @@
                             <i class="fas fa-arrow-left mr-2"></i>Continue Shopping
                         </a>
 
-                        <button class="w-full bg-linear-to-r from-amber-500 to-orange-500 text-white font-bold py-3 rounded-lg mt-4 hover:from-amber-600 hover:to-orange-600 transition">
+                        <a href="{{ route('checkout', $client->id) }}" class="w-full bg-linear-to-r from-amber-500 to-orange-500 text-white font-bold py-3 rounded-lg mt-4 hover:from-amber-600 hover:to-orange-600 transition text-center block">
                             <i class="fas fa-lock mr-2"></i>Proceed to Checkout
-                        </button>
+                        </a>
 
                         <p class="text-xs text-gray-500 text-center mt-4">
                             <i class="fas fa-shield-alt mr-1"></i>
